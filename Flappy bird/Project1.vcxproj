@@ -39,18 +39,20 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>C:\Users\Turic Ioana\Desktop\Flappy bird\SFML-2.4.1-windows-vc12-32-bit\SFML-2.4.1\include;C:\Users\Turic Ioana\Desktop\Project1\SFML-2.4.1-windows-vc12-32-bit\SFML-2.4.1\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\Turic Ioana\Desktop\Flappy bird\SFML-2.4.1-windows-vc12-32-bit\SFML-2.4.1\lib;C:\Users\Turic Ioana\Desktop\Project1\SFML-2.4.1-windows-vc12-32-bit\SFML-2.4.1\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\Turic Ioana\Desktop\nu strica\SFML-2.4.1-windows-vc12-32-bit\SFML-2.4.1\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\Turic Ioana\Desktop\nu strica\SFML-2.4.1-windows-vc12-32-bit\SFML-2.4.1\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>C:\Users\Turic Ioana\Desktop\Project1\SFML-2.4.1-windows-vc12-32-bit\SFML-2.4.1\include;C:\Users\Turic Ioana\Desktop\Project1\SFML-2.4.1-windows-vc12-64-bit\SFML-2.4.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>C:\Users\Turic Ioana\Desktop\Project1\SFML-2.4.1-windows-vc12-32-bit\SFML-2.4.1\lib;C:\Users\Turic Ioana\Desktop\Project1\SFML-2.4.1-windows-vc12-64-bit\SFML-2.4.1\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>sfml-graphics.lib;sfml-window.lib;sfml-system.lib;sfml-main.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Windows</SubSystem>
     </Link>
