@@ -33,45 +33,100 @@ float width = 50;
 int points = 0;
 float speed_bird = 3.5;
 sf::Texture pipe_downTexture;
-sf::Texture pipe1Texture;
 sf::Texture pipe_upTexture;
-sf::Texture pipe2_downTexture;
-sf::Sprite pipe_downImage;
-sf::Sprite pipe1Image;
-sf::Sprite pipe_upImage;
+
+sf::Sprite pipeMenu_Image;
+
+sf::Sprite pipe1_upImage;
+sf::Sprite pipe1_downImage;
+
+sf::Sprite pipe2_upImage;
+sf::Sprite pipe2_downImage;
+
+sf::Sprite pipe3_upImage;
+sf::Sprite pipe3_downImage;
+
+
+float xPipe1 = 800;
+float xPipe2 = 1200;
+float xPipe3 = 1600;
+
+float yPipe1 = -275;
+float yPipe2 = -200;
+float yPipe3 = -250;
+
 int free_space = 150;
-float x = 800;
-float y_up = 100;
-float y_down = 100;
 float pipe_len = 375;
 float pipe_width = 150;
 float speed_pipe= 4.5;
 
-
-void Menu()
+int getRand(int A, int B)
 {
-	if (!font.loadFromFile("font/good.ttf"))
-		throw std::runtime_error("Could not load good.ttf");
-	// Getting Error here!
+	return rand() % (A - B) + A;
+}
+
+void loadFiles()
+{
 	if (!bkTexture.loadFromFile("Images/background.png"))
 		throw std::runtime_error("Could not load background.png");
 	bkImage.setTexture(bkTexture);
-	bkImage.setPosition(0, 0);
 
-	if (!logoTexture.loadFromFile("Images/flappy.png"))
-		throw std::runtime_error("Could not load flappy.png");
-	logoImage.setTexture(logoTexture);
-	logoImage.setPosition(50, 10);
+	if (!floorTexture.loadFromFile("Images/floor.png"))
+		throw std::runtime_error("Could not load floor.png");
+	floorImage.setTexture(floorTexture);
+
+	if (!pipe_upTexture.loadFromFile("Images/pipe_up.png"))
+		throw std::runtime_error("Could not load floor.png");
 
 	if (!pipe_downTexture.loadFromFile("Images/pipe_down.png"))
 		throw std::runtime_error("Could not load pipe_down.png");
-	pipe_downImage.setTexture(pipe_downTexture);
-	pipe_downImage.setPosition(30, 400);
 
-	if (!pipe1Texture.loadFromFile("Images/pipe_down.png"))
-		throw std::runtime_error("Could not load pipe_down.png");
-	pipe1Image.setTexture(pipe1Texture);
-	pipe1Image.setPosition(620, 330);
+	if (!font.loadFromFile("font/good.ttf"))
+		throw std::runtime_error("Could not load good.ttf");
+
+	if (!logoTexture.loadFromFile("Images/flappy.png"))
+		throw std::runtime_error("Could not load flappy.png");
+}
+
+void setPipeAtPos(int x, int carePipe)
+{
+	switch (carePipe)
+	{
+	case 1:
+	{
+			  pipe1_upImage.setPosition(x, yPipe1);
+			  pipe1_downImage.setPosition(x, yPipe1 + pipe_len + free_space);
+			  break;
+	}
+	case 2:
+	{
+			  pipe2_upImage.setPosition(x, yPipe2);
+			  pipe2_downImage.setPosition(x, yPipe2 + pipe_len + free_space);
+			  break;
+	}
+	case 3:
+	{
+			  pipe3_upImage.setPosition(x, yPipe3);
+			  pipe3_downImage.setPosition(x, yPipe3 + pipe_len + free_space);
+			  break;
+	}
+	}
+
+}
+
+void Menu()
+{
+	bkImage.setTexture(bkTexture);
+	bkImage.setPosition(0, 0);
+
+	logoImage.setTexture(logoTexture);
+	logoImage.setPosition(50, 10);
+
+	pipe1_downImage.setTexture(pipe_downTexture);
+	pipe1_downImage.setPosition(30, 400);
+
+	pipeMenu_Image.setTexture(pipe_downTexture);
+	pipeMenu_Image.setPosition(620, 330);
 
 	//MENU
 	sf::Text menu("Menu", font, 135);
@@ -135,8 +190,8 @@ void Menu()
 
 		window.draw(bkImage);
 		window.draw(logoImage);
-		window.draw(pipe_downImage);
-		window.draw(pipe1Image);
+		window.draw(pipe1_downImage);
+		window.draw(pipeMenu_Image);
 		window.draw(menu);
 		for (int i = 0; i<buttons; i++)
 		{
@@ -148,50 +203,88 @@ void Menu()
 
 void Play()
 {
-	if (!bkTexture.loadFromFile("Images/background.png"))
-		throw std::runtime_error("Could not load background.png");
-	bkImage.setTexture(bkTexture);
 	bkImage.setPosition(0, 0);
-	if (!floorTexture.loadFromFile("Images/floor.png"))
-		throw std::runtime_error("Could not load floor.png");
-	floorImage.setTexture(floorTexture);
 	floorImage.setPosition(0, 550);
-	if (!pipe_upTexture.loadFromFile("Images/pipe_up.png")){
-		throw std::runtime_error("Could not load floor.png");
-		state = 0;
-	}
-	pipe_upImage.setTexture(pipe_upTexture);
-	pipe_upImage.setPosition(300, -150);
-	if (!pipe_downTexture.loadFromFile("Images/pipe_down.png"))
-	{
-		throw std::runtime_error("Could not load pipe_down.png");
-		//state = 0;
-	}
-	pipe_downImage.setTexture(pipe_downTexture);
-	pipe_downImage.setPosition(300, 400);
+	sf::Text back("Press Esc for going back to MENU", font, 20);
+	back.setStyle(sf::Text::Bold);
+	back.setFillColor(sf::Color(255, 0, 0));
+	back.setPosition(0, 573);
 
+	pipe1_upImage.setTexture(pipe_upTexture);
+	pipe1_downImage.setTexture(pipe_downTexture);
+	setPipeAtPos(xPipe1, 1);
+
+
+	pipe2_downImage.setTexture(pipe_downTexture);
+	pipe2_upImage.setTexture(pipe_upTexture);
+	setPipeAtPos(xPipe2, 2);
+	
+
+	pipe3_downImage.setTexture(pipe_downTexture);
+	pipe3_upImage.setTexture(pipe_upTexture);
+	setPipeAtPos(xPipe3, 3);
+
+
+	window.setFramerateLimit(60);
 	while (state == 2)
 	{
+		sf::Vector2f mouse(sf::Mouse::getPosition(window));
 		sf::Event event;
+
 		while (window.pollEvent(event))
 		{
-			if (event.type == sf::Event::Closed || event.type == sf::Event::KeyPressed&&
-				event.key.code == sf::Keyboard::Escape)
-				window.close();
+			if (event.type == sf::Event::Closed)
+				state = 0;
+			else if (event.type == sf::Event::KeyPressed&&event.key.code == sf::Keyboard::Escape)
+				state = 1;
 		}
+		if (xPipe1 <= -400)
+		{
+			xPipe1 = 800;
+			yPipe1 = getRand(-275, -75);
+		}
+
+		if (xPipe2 <= -400)
+		{
+			xPipe2 = 800;
+			yPipe2 = getRand(-275, -75);
+		}
+
+		if (xPipe3 <= -400)
+		{
+			xPipe3 = 800;
+			yPipe3 = getRand(-275, -75);
+		}
+
+		xPipe1 = xPipe1 - speed_pipe;
+		xPipe2 = xPipe2 - speed_pipe;
+		xPipe3 = xPipe3 - speed_pipe;
+
+		setPipeAtPos(xPipe1, 1);
+		setPipeAtPos(xPipe2, 2);
+		setPipeAtPos(xPipe3, 3);
+
 		window.clear();
 		window.draw(bkImage);
-		window.draw(pipe_upImage);
-		window.draw(pipe_downImage);
-		//window.draw(pipe2_up);
-		//window.draw(pipe2_down);
+		
+		window.draw(pipe1_upImage);
+		window.draw(pipe1_downImage);
+		window.draw(pipe2_upImage);
+		window.draw(pipe2_downImage);
+		window.draw(pipe3_upImage);
+		window.draw(pipe3_downImage);
+
 		window.draw(floorImage);
+		window.draw(back);
+
 		window.display();
 	}
 }
 
 void startGame()
 {
+	loadFiles();
+
 	while (state != 0)
 	{
 		switch (state)
