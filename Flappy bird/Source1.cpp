@@ -225,7 +225,7 @@ void Menu()
 
 	sf::Text buttons_text[buttons];
 	buttons_text[0].setString("Play");
-	buttons_text[1].setString("Leaderboard");
+	buttons_text[1].setString("Leader board");
 	buttons_text[2].setString("Quit");
 	for (int i = 0; i < buttons; i++)
 	{
@@ -236,7 +236,6 @@ void Menu()
 
 	while (state == 1)
 	{
-		//sf::Time elapsed = cronometru.restart();
 		sf::Vector2f mouse(sf::Mouse::getPosition(window));
 		sf::Event event;
 
@@ -251,9 +250,6 @@ void Menu()
 				sf::Mouse::isButtonPressed(sf::Mouse::Left))
 			{
 				state = 2;
-				//updateGame(elapsed);
-				//std::cout << elapsed.asSeconds() << std::endl;
-				//clock.restart();
 			}
 			else if (buttons_text[1].getGlobalBounds().contains(mouse) &&
 				(event.type == sf::Event::MouseButtonReleased) &&
@@ -290,6 +286,7 @@ void Menu()
 		window.display();
 	}
 }
+
 void Leaderboard()
 {
 	bkImage.setTexture(bkTexture);
@@ -305,7 +302,7 @@ void Leaderboard()
 	back.setPosition(310, 430);
 
 	//Leaderboard
-	sf::Text leaderboard("Leaderboard", font, 100);
+	sf::Text leaderboard("Leader board", font, 100);
 	leaderboard.setStyle(sf::Text::Bold);
 	leaderboard.setFillColor(sf::Color(255, 0, 0));
 	leaderboard.setPosition(135, 40);
@@ -511,6 +508,9 @@ void Play()
 	pipe3_upImage.setTexture(pipe_upTexture);
 	setPipeAtPos(xPipe3, 3);
 
+	sf::Clock clock;
+	sf::Time time;
+	std::cout << time.asSeconds() << std::endl;
 
 	window.setFramerateLimit(60);
 	while (state == 2)
@@ -583,6 +583,13 @@ void Play()
 
 		birdImage.setPosition(xBird, yBird);
 
+		time = clock.getElapsedTime();
+		std::cout << time.asSeconds() << std::endl;
+		clock.restart();
+		time.asSeconds();
+		sprintInt = sprintf_s(timeText, "%d", time.asSeconds());
+		timeM.setString(timeText);
+
 		window.clear();
 		window.draw(bkImage);
 		
@@ -617,7 +624,7 @@ void Play()
 			window.draw(scor);
 			window.draw(Scores);
 			window.draw(gameTime);
-			window.draw(timeM);
+			//window.draw(timeM);
 			window.display();
 			while (state == 4)
 			{
@@ -629,7 +636,7 @@ void Play()
 						state = 0;
 					else if (back.getGlobalBounds().contains(mouse) && sf::Mouse::isButtonPressed(sf::Mouse::Left))
 					{
-						timeScurs = 0;
+						//timeScurs = 0;
 						state = 1;
 					}
 					else if (button.getGlobalBounds().contains(mouse) && sf::Mouse::isButtonPressed(sf::Mouse::Left))//Jocul o ia de la capat
