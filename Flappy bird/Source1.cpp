@@ -6,35 +6,87 @@
 #include <sstream>
 #include <time.h>
 #include <fstream>
+#include <stdio.h>
+using namespace std;
 
 int state=1;//state=0 cand jocul este inchis, state=1 cand jocul se afla in meniu, state=2 atunci cand ruleaza jocul, state=3 atunci cand dorim sa afisam leaderboard-ul;
 sf::RenderWindow window(sf::VideoMode(800, 600), "Flappy Bird");
 sf::Font font;
 sf::Text text;
-sf::Text error;
 sf::Texture logoTexture;
 sf::Texture bkTexture;
 sf::Texture floorTexture;
+sf::Texture overTexture;
+sf::Sprite overImage;
 sf::Sprite logoImage;
 sf::Sprite bkImage;
 sf::Sprite floorImage;
-//sf::SoundBuffer get_point_buffer;
-//sf::SoundBuffer go_up_buffer;
-//sf::SoundBuffer die_buffer;
+
+int points = 0;
+int highScore[5];
+void readScore()
+{
+		std::ifstream fin("Images/score.txt");
+		int i;
+		for (i = 0; i < 5; i++)
+			fin >> highScore[i];
+		fin.close();
+}
+void updateScore()
+{
+	int i, j, auxA, auxB;
+	for (i = 0; i < 5; i++)
+	{
+		if (points >= highScore[i])
+		{
+			auxA = highScore[i];
+			highScore[i] = points;
+			for (j = i + 1; j < 5; j++)
+			{
+				auxB = highScore[j];
+				highScore[j] = auxA;
+				auxA = auxB;
+			}
+			return;
+		}
+	}
+}
+void updateFile()
+{
+	int i;
+	std:: ifstream fin("Resources/score.txt");
+	fin.close();
+
+	std::ofstream ofs("Resources/score.txt",std::ios::out | ios::trunc);
+	for (i = 0; i < 5; i++)
+		ofs << highScore[i] << endl;
+}
+
+
+/*sf::SoundBuffer get_pointBuffer;
+sf::SoundBuffer go_upBuffer;
+sf::SoundBuffer dieBuffer;
+
+sf::Sound get_point;
+sf::Sound go_up;
+sf::Sound die;
+int sounds = 1;*/
+sf::Music get_pointMusic;
+sf::Music go_upMusic;
+sf::Music dieMusic;
 
 sf::Texture birdTexture;
 sf::Sprite birdImage;
 
-//sf::Sound get_point;
-//sf::Sound go_up;
-//sf::Sound die;
 float yBird = 300;
 float xBird = 30;
 
 float length = 50;
 float width = 50;
 
-int points = 0;
+int timeScurs = 0;
+char scorText[32];
+char timeText[32];
 
 float speed_bird = 3.5;
 sf::Texture pipe_downTexture;
@@ -63,6 +115,7 @@ int free_space = 150;
 float pipe_len = 375;
 float pipe_width = 150;
 float speed_pipe= 4.5;
+
 void replay();
 
 int getRand(int A, int B)
@@ -94,6 +147,18 @@ void loadFiles()
 
 	if (!birdTexture.loadFromFile("Images/bird.png"))
 		throw std::runtime_error("Could not load bird.png");
+
+	if (!overTexture.loadFromFile("Images/gameover.png"))
+		throw std::runtime_error("Could not load gameover.png");
+
+	if (!get_pointMusic.openFromFile("sounds/get_point.ogg"))
+		std::cout << "Can't find" << std::endl;
+
+	if (!go_upMusic.openFromFile("sounds/go_up.ogg"))
+		std::cout << "Can't find" << std::endl;
+
+	if (!dieMusic.openFromFile("sounds/die.ogg"))
+		std::cout << "Can't find" << std::endl;
 }
 
 void setPipeAtPos(int x, int carePipe)
@@ -172,13 +237,12 @@ void Menu()
 			{
 				state = 2;
 			}
-			/*else if (buttons_text[1].getGlobalBounds().contains(mouse) &&
+			else if (buttons_text[1].getGlobalBounds().contains(mouse) &&
 				(event.type == sf::Event::MouseButtonReleased) &&
 				(event.key.code == sf::Mouse::Left))
 			{
 				state = 3;
 			}
-			*/
 			else if (buttons_text[2].getGlobalBounds().contains(mouse) &&
 				sf::Mouse::isButtonPressed(sf::Mouse::Left))
 			{
@@ -208,9 +272,51 @@ void Menu()
 		window.display();
 	}
 }
+void Leaderboard()
+{
+	bkImage.setTexture(bkTexture);
+	bkImage.setPosition(0, 0);
+	overImage.setTexture(overTexture);
+	overImage.setPosition(100, 180);
+	floorImage.setPosition(0, 550);
+
+	//retrun to menu
+	sf::Text back("Back To MENU", font, 30);
+	back.setStyle(sf::Text::Bold);
+	back.setFillColor(sf::Color(255, 0, 0));
+	back.setPosition(310, 430);
+
+	//Leaderboard
+	sf::Text leaderboard("Leaderboard", font, 100);
+	leaderboard.setStyle(sf::Text::Bold);
+	leaderboard.setFillColor(sf::Color(255, 0, 0));
+	leaderboard.setPosition(135, 40);
+	while (state == 3)
+	{
+		sf::Vector2f mouse(sf::Mouse::getPosition(window));
+		sf::Event event;
+
+		while (window.pollEvent(event))
+		{
+			if (event.type == sf::Event::Closed || event.type == sf::Event::KeyPressed&&
+				event.key.code == sf::Keyboard::Escape)
+				state = 0;
+			else if (back.getGlobalBounds().contains(mouse) && sf::Mouse::isButtonPressed(sf::Mouse::Left))
+				state = 1;
+		}
+		window.clear();
+		window.draw(bkImage);
+		window.draw(leaderboard);
+		window.draw(overImage);
+		window.draw(floorImage);
+		window.draw(back);
+		window.display();
+	}
+}
 
 void resetBird()
 {
+	timeScurs = 0;
 	speed_bird = 3.5; 
 	yBird = 300;
 	xBird = 30; 
@@ -229,14 +335,15 @@ void resetPipes()
 	yPipe2 = getRand(-275, -75);
 	yPipe3 = getRand(-275, -75);
 }
+
 bool checkCollision(int x, int y)
 {
 	if(x <= xBird + width && x + pipe_width >= xBird + width)
 	{
-		if(yBird <= y + pipe_len)
-		return true;
+		if (yBird <= y + pipe_len)
+			return true;
 		if (yBird + length >= y + pipe_len + free_space)
-		return true;
+			return true;
 	}
 
 	if (yBird + length > 550)
@@ -250,30 +357,67 @@ void getPoints(int x, int y)
 	if (x > xBird - pipe_width - 4.5 && x + pipe_width <= xBird && checkCollision(x, y) == false )
 	{
 		points++;
+		get_pointMusic.play();
 	}
-	std::cout << points;
+	//std::cout << points;
 }
 
 void Play()
 {
-	
+	int sprintInt;
 	points = 0;
 	resetPipes();
 	resetBird();
 	bkImage.setPosition(0, 0);
+	overImage.setTexture(overTexture);
 	floorImage.setPosition(0, 550);
 	birdImage.setTexture(birdTexture);
 	birdImage.setPosition(xBird, yBird);
+	overImage.setPosition(100, 200); 
 
-	sf::Text back("Press Esc for going back to MENU", font, 20);
+	/*get_point.setBuffer(get_pointBuffer);
+	go_up.setBuffer(go_upBuffer);
+	die.setBuffer(dieBuffer);*/
+
+	sf::Text gameTime("Time", font, 40);
+	gameTime.setStyle(sf::Text::Bold);
+	gameTime.setFillColor(sf::Color(255, 255, 255));
+	gameTime.setPosition(150, 290);
+
+	sf::Text bestScore("Best Score", font, 40);
+	bestScore.setStyle(sf::Text::Bold);
+	bestScore.setFillColor(sf::Color(255, 255, 255));
+	bestScore.setPosition(150, 350);
+
+	sf::Text Score("Score", font, 40);
+	Score.setStyle(sf::Text::Bold);
+	Score.setFillColor(sf::Color(255, 255, 255));
+	Score.setPosition(150, 230);
+
+	sf::Text over("Game Over", font, 100);
+	over.setStyle(sf::Text::Bold);
+	over.setFillColor(sf::Color(255, 0, 0));
+	over.setPosition(180, 50);
+
+	sf::Text back("Back To MENU", font, 30);
 	back.setStyle(sf::Text::Bold);
 	back.setFillColor(sf::Color(255, 0, 0));
-	back.setPosition(0, 573);
+	back.setPosition(150, 430);
 
-	sf::Text button("Replay", font, 20);
+	sf::Text button("Replay", font, 30);
 	button.setStyle(sf::Text::Bold);
 	button.setFillColor(sf::Color(255, 0, 0));
-	button.setPosition(740, 573);
+	button.setPosition(560, 430);
+
+	sf::Text timeM(timeText, font, 40);
+	timeM.setStyle(sf::Text::Bold);
+	timeM.setFillColor(sf::Color(255, 255, 255));
+	timeM.setPosition(400, 290);
+	
+	sf::Text scor(scorText, font, 40);
+	scor.setStyle(sf::Text::Bold);
+	scor.setFillColor(sf::Color(255, 255, 255));
+	scor.setPosition(400, 230);
 
 	pipe1_upImage.setTexture(pipe_upTexture);
 	pipe1_downImage.setTexture(pipe_downTexture);
@@ -293,37 +437,35 @@ void Play()
 	window.setFramerateLimit(60);
 	while (state == 2)
 	{
-		sf::Vector2f mouse(sf::Mouse::getPosition(window));
+		timeScurs = (int)clock() / CLOCKS_PER_SEC;
+		sprintInt = sprintf_s(scorText, "%d", points);
+		sprintInt = sprintf_s(timeText, "%d", timeScurs);
+
+		scor.setString(scorText);
+
 		sf::Event event;
+		sf::Vector2f mouse(sf::Mouse::getPosition(window));
+
 
 		while (window.pollEvent(event))
 		{
-			if (event.type == sf::Event::Closed)
+			if (event.type == sf::Event::Closed){
 				state = 0;
-			else if (event.type == sf::Event::KeyPressed&&event.key.code == sf::Keyboard::Escape)
-				state = 1;
-			else if (button.getGlobalBounds().contains(mouse) && sf::Mouse::isButtonPressed(sf::Mouse::Left))//Jocul o ia de la capat
-			{
-				replay();
 			}
+
 			else if (event.type == sf::Event::KeyPressed&&event.key.code == sf::Keyboard::Space)
 			{
 				if (speed_bird != 0)
 				{
-					yBird= yBird - 70;
-					//if (sounds) bird.go_up.play();
+					yBird= yBird - 60;
+					go_upMusic.play();
 				}
 			}
-			/*else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return) && speed_bird == 0)
+			else if (button.getGlobalBounds().contains(mouse) && sf::Mouse::isButtonPressed(sf::Mouse::Left))//Jocul o ia de la capat
 			{
-				state = 2;
-			}*/
-		}
-
-		if (checkCollision(xPipe1, yPipe1) || checkCollision(xPipe2, yPipe2) || checkCollision(xPipe3, yPipe3))
-		{
-			speed_bird = 0;
-			speed_pipe = 0;
+				timeScurs = 0;
+				replay();
+			}
 		}
 
 		getPoints(xPipe1, yPipe1);
@@ -371,8 +513,46 @@ void Play()
 
 		window.draw(floorImage);
 		window.draw(birdImage);
-		window.draw(back);
-		window.draw(button);
+		if (checkCollision(xPipe1, yPipe1) || checkCollision(xPipe2, yPipe2) || checkCollision(xPipe3, yPipe3))
+		{
+			dieMusic.play();
+			state = 4;
+			updateScore();
+			updateFile();
+			timeM.setString(timeText);
+			speed_bird = 0;
+			speed_pipe = 0;
+			window.draw(overImage);
+			window.draw(over);
+			window.draw(back);
+			window.draw(button);
+			window.draw(scor);
+			window.draw(Score);
+			window.draw(gameTime);
+			window.draw(bestScore);
+			window.draw(timeM);
+			window.display();
+			while (state == 4)
+			{
+				sf::Vector2f mouse(sf::Mouse::getPosition(window));
+				sf::Event event;
+				while (window.pollEvent(event))
+				{
+					if (event.type == sf::Event::Closed)
+						state = 0;
+					else if (back.getGlobalBounds().contains(mouse) && sf::Mouse::isButtonPressed(sf::Mouse::Left))
+					{
+						timeScurs = 0;
+						state = 1;
+					}
+					else if (button.getGlobalBounds().contains(mouse) && sf::Mouse::isButtonPressed(sf::Mouse::Left))//Jocul o ia de la capat
+					{
+						state = 2;
+						replay();
+					}
+				}	
+			}
+		}
 
 		window.display();
 	}
@@ -398,9 +578,9 @@ void startGame()
 		case 2:
 			Play();
 			break;
-		/*case 3:
+		case 3:
 			Leaderboard();
-			break;*/
+			break;
 		case 0:
 			break;
 		}
