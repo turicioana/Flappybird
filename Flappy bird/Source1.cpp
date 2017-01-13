@@ -13,14 +13,22 @@ int state=1;//state=0 cand jocul este inchis, state=1 cand jocul se afla in meni
 sf::RenderWindow window(sf::VideoMode(800, 600), "Flappy Bird");
 sf::Font font;
 sf::Text text;
+sf::Texture upTexture;
+sf::Sprite upImage;
+sf::Texture speedTexture;
+sf::Texture no_speedTexture;
 sf::Texture logoTexture;
 sf::Texture bkTexture;
 sf::Texture floorTexture;
 sf::Texture overTexture;
+sf::Sprite speedImage;
+sf::Sprite no_speedImage;
 sf::Sprite overImage;
 sf::Sprite logoImage;
 sf::Sprite bkImage;
 sf::Sprite floorImage;
+
+sf::Clock cronometru;
 
 int points = 0;
 int highScore[5];
@@ -54,23 +62,14 @@ void updateScore()
 void updateFile()
 {
 	int i;
-	std:: ifstream fin("Resources/score.txt");
+	std:: ifstream fin("Images/score.txt");
 	fin.close();
 
-	std::ofstream ofs("Resources/score.txt",std::ios::out | ios::trunc);
+	std::ofstream ofs("Images/score.txt",std::ios::out | ios::trunc);
 	for (i = 0; i < 5; i++)
 		ofs << highScore[i] << endl;
 }
 
-
-/*sf::SoundBuffer get_pointBuffer;
-sf::SoundBuffer go_upBuffer;
-sf::SoundBuffer dieBuffer;
-
-sf::Sound get_point;
-sf::Sound go_up;
-sf::Sound die;
-int sounds = 1;*/
 sf::Music get_pointMusic;
 sf::Music go_upMusic;
 sf::Music dieMusic;
@@ -87,6 +86,8 @@ float width = 50;
 int timeScurs = 0;
 char scorText[32];
 char timeText[32];
+char leaderScores[32];
+
 
 float speed_bird = 3.5;
 sf::Texture pipe_downTexture;
@@ -125,6 +126,11 @@ int getRand(int A, int B)
 
 void loadFiles()
 {
+	readScore();
+	if (!upTexture.loadFromFile("Images/up.png"))
+		throw std::runtime_error("Could not load up.png");
+	upImage.setTexture(upTexture);
+
 	if (!bkTexture.loadFromFile("Images/background.png"))
 		throw std::runtime_error("Could not load background.png");
 	bkImage.setTexture(bkTexture);
@@ -144,6 +150,14 @@ void loadFiles()
 
 	if (!logoTexture.loadFromFile("Images/flappy.png"))
 		throw std::runtime_error("Could not load flappy.png");
+
+	if (!speedTexture.loadFromFile("Images/speed.png"))
+		throw std::runtime_error("Could not load speed.png");
+	speedImage.setTexture(speedTexture);
+
+	if (!no_speedTexture.loadFromFile("Images/no_speed.png"))
+		throw std::runtime_error("Could not load no_speed.png");
+	no_speedImage.setTexture(no_speedTexture);
 
 	if (!birdTexture.loadFromFile("Images/bird.png"))
 		throw std::runtime_error("Could not load bird.png");
@@ -222,6 +236,7 @@ void Menu()
 
 	while (state == 1)
 	{
+		//sf::Time elapsed = cronometru.restart();
 		sf::Vector2f mouse(sf::Mouse::getPosition(window));
 		sf::Event event;
 
@@ -236,6 +251,9 @@ void Menu()
 				sf::Mouse::isButtonPressed(sf::Mouse::Left))
 			{
 				state = 2;
+				//updateGame(elapsed);
+				//std::cout << elapsed.asSeconds() << std::endl;
+				//clock.restart();
 			}
 			else if (buttons_text[1].getGlobalBounds().contains(mouse) &&
 				(event.type == sf::Event::MouseButtonReleased) &&
@@ -291,6 +309,21 @@ void Leaderboard()
 	leaderboard.setStyle(sf::Text::Bold);
 	leaderboard.setFillColor(sf::Color(255, 0, 0));
 	leaderboard.setPosition(135, 40);
+
+	sf::Text Score;
+	Score.setFont(font);
+	Score.setCharacterSize(36);
+	Score.setStyle(sf::Text::Bold);
+	Score.setFillColor(sf::Color(255, 255, 255));
+	Score.setPosition(300, 200);
+
+	sf::Text Index;
+	Index.setFont(font);
+	Index.setCharacterSize(36);
+	Index.setStyle(sf::Text::Bold);
+	Index.setFillColor(sf::Color(255, 255, 255));
+	Index.setPosition(300, 200);
+
 	while (state == 3)
 	{
 		sf::Vector2f mouse(sf::Mouse::getPosition(window));
@@ -310,6 +343,42 @@ void Leaderboard()
 		window.draw(overImage);
 		window.draw(floorImage);
 		window.draw(back);
+
+		int yPos = 220;
+		for (int i = 0; i < 5; i++)
+		{
+			char index[3] = "";
+			sprintf_s(index, "%d", i + 1);
+			sprintf_s(leaderScores, "%d", highScore[i]);
+
+			switch (i)
+			{
+			case 0:
+				Index.setFillColor(sf::Color(255, 0, 0));
+				Score.setFillColor(sf::Color(255, 0, 0));
+				break;
+			default:
+				Index.setFillColor(sf::Color(255, 255, 255));
+				Score.setFillColor(sf::Color(255, 255, 255));
+				break;
+			}
+			Index.setPosition(300, yPos);
+			Index.setString(index);
+
+			Score.setPosition(450, yPos);
+			Score.setString(leaderScores);
+			window.draw(Score);
+			window.draw(Index);
+			if (i == 4)
+			{
+				yPos = 220;
+			}
+			else
+			{
+				yPos += 40;
+			}
+
+		}
 		window.display();
 	}
 }
@@ -371,28 +440,37 @@ void Play()
 	bkImage.setPosition(0, 0);
 	overImage.setTexture(overTexture);
 	floorImage.setPosition(0, 550);
+	speedImage.setPosition(170, 565);
+	upImage.setPosition(745, 565);
+	no_speedImage.setPosition(470, 565);
 	birdImage.setTexture(birdTexture);
 	birdImage.setPosition(xBird, yBird);
 	overImage.setPosition(100, 200); 
 
-	/*get_point.setBuffer(get_pointBuffer);
-	go_up.setBuffer(go_upBuffer);
-	die.setBuffer(dieBuffer);*/
+	sf::Text normal("Normal speed", font, 20);
+	normal.setStyle(sf::Text::Bold);
+	normal.setFillColor(sf::Color(0, 0, 0));
+	normal.setPosition(620, 565);
 
-	sf::Text gameTime("Time", font, 40);
+	sf::Text speed("Increase the speed", font, 20);
+	speed.setStyle(sf::Text::Bold);
+	speed.setFillColor(sf::Color(0, 0, 0));
+	speed.setPosition(1, 565);
+
+	sf::Text no_speed("Decrease the speed", font, 20);
+	no_speed.setStyle(sf::Text::Bold);
+	no_speed.setFillColor(sf::Color(0, 0, 0));
+	no_speed.setPosition(300, 565);
+
+	sf::Text gameTime("Time", font, 60);
 	gameTime.setStyle(sf::Text::Bold);
 	gameTime.setFillColor(sf::Color(255, 255, 255));
-	gameTime.setPosition(150, 290);
+	gameTime.setPosition(150, 340);
 
-	sf::Text bestScore("Best Score", font, 40);
-	bestScore.setStyle(sf::Text::Bold);
-	bestScore.setFillColor(sf::Color(255, 255, 255));
-	bestScore.setPosition(150, 350);
-
-	sf::Text Score("Score", font, 40);
-	Score.setStyle(sf::Text::Bold);
-	Score.setFillColor(sf::Color(255, 255, 255));
-	Score.setPosition(150, 230);
+	sf::Text Scores("Score", font, 60);
+	Scores.setStyle(sf::Text::Bold);
+	Scores.setFillColor(sf::Color(255, 255, 255));
+	Scores.setPosition(150, 230);
 
 	sf::Text over("Game Over", font, 100);
 	over.setStyle(sf::Text::Bold);
@@ -409,12 +487,12 @@ void Play()
 	button.setFillColor(sf::Color(255, 0, 0));
 	button.setPosition(560, 430);
 
-	sf::Text timeM(timeText, font, 40);
+	sf::Text timeM(timeText, font, 60);
 	timeM.setStyle(sf::Text::Bold);
 	timeM.setFillColor(sf::Color(255, 255, 255));
-	timeM.setPosition(400, 290);
+	timeM.setPosition(400, 340);
 	
-	sf::Text scor(scorText, font, 40);
+	sf::Text scor(scorText, font, 60);
 	scor.setStyle(sf::Text::Bold);
 	scor.setFillColor(sf::Color(255, 255, 255));
 	scor.setPosition(400, 230);
@@ -437,12 +515,9 @@ void Play()
 	window.setFramerateLimit(60);
 	while (state == 2)
 	{
-		timeScurs = (int)clock() / CLOCKS_PER_SEC;
 		sprintInt = sprintf_s(scorText, "%d", points);
-		sprintInt = sprintf_s(timeText, "%d", timeScurs);
 
 		scor.setString(scorText);
-
 		sf::Event event;
 		sf::Vector2f mouse(sf::Mouse::getPosition(window));
 
@@ -463,10 +538,17 @@ void Play()
 			}
 			else if (button.getGlobalBounds().contains(mouse) && sf::Mouse::isButtonPressed(sf::Mouse::Left))//Jocul o ia de la capat
 			{
-				timeScurs = 0;
 				replay();
 			}
 		}
+		if (event.type == sf::Event::KeyPressed&&event.key.code == sf::Keyboard::Right)
+			speed_pipe = 5.5;
+		else
+		if (event.type == sf::Event::KeyPressed&&event.key.code == sf::Keyboard::Left)
+			speed_pipe = 2.5;
+		else
+		if (event.type == sf::Event::KeyPressed&&event.key.code == sf::Keyboard::Up)
+			speed_pipe = 4, 5;
 
 		getPoints(xPipe1, yPipe1);
 		getPoints(xPipe2, yPipe2);
@@ -512,6 +594,12 @@ void Play()
 		window.draw(pipe3_downImage);
 
 		window.draw(floorImage);
+		window.draw(speed);
+		window.draw(no_speed);
+		window.draw(normal);
+		window.draw(speedImage);
+		window.draw(no_speedImage);
+		window.draw(upImage);
 		window.draw(birdImage);
 		if (checkCollision(xPipe1, yPipe1) || checkCollision(xPipe2, yPipe2) || checkCollision(xPipe3, yPipe3))
 		{
@@ -527,9 +615,8 @@ void Play()
 			window.draw(back);
 			window.draw(button);
 			window.draw(scor);
-			window.draw(Score);
+			window.draw(Scores);
 			window.draw(gameTime);
-			window.draw(bestScore);
 			window.draw(timeM);
 			window.display();
 			while (state == 4)
@@ -556,6 +643,8 @@ void Play()
 
 		window.display();
 	}
+	updateScore();
+	updateFile();
 }
 
 void replay()

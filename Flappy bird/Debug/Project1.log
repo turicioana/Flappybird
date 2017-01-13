@@ -1,31 +1,33 @@
-﻿Build started 13.01.2017 16:01:51.
+﻿Build started 13.01.2017 22:56:12.
      1>Project "C:\Users\Turic Ioana\Documents\GitHub\Flappybird\Flappy Bird\Project1.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I"C:\Users\Turic Ioana\Desktop\Project1\SFML-2.4.1-windows-vc12-32-bit\SFML-2.4.1\include" /I"C:\Users\Turic Ioana\Desktop\Project1\SFML-2.4.1-windows-vc12-64-bit\SFML-2.4.1\include" /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Source1.cpp
          Source1.cpp
-     1>c:\users\turic ioana\documents\github\flappybird\flappy bird\source1.cpp(170): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>c:\users\turic ioana\documents\github\flappybird\flappy bird\source1.cpp(171): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>c:\users\turic ioana\documents\github\flappybird\flappy bird\source1.cpp(176): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>c:\users\turic ioana\documents\github\flappybird\flappy bird\source1.cpp(177): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>c:\users\turic ioana\documents\github\flappybird\flappy bird\source1.cpp(182): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>c:\users\turic ioana\documents\github\flappybird\flappy bird\source1.cpp(183): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>c:\users\turic ioana\documents\github\flappybird\flappy bird\source1.cpp(220): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>c:\users\turic ioana\documents\github\flappybird\flappy bird\source1.cpp(334): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
-     1>c:\users\turic ioana\documents\github\flappybird\flappy bird\source1.cpp(335): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
-     1>c:\users\turic ioana\documents\github\flappybird\flappy bird\source1.cpp(336): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
-     1>c:\users\turic ioana\documents\github\flappybird\flappy bird\source1.cpp(424): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
-     1>c:\users\turic ioana\documents\github\flappybird\flappy bird\source1.cpp(429): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
-     1>c:\users\turic ioana\documents\github\flappybird\flappy bird\source1.cpp(434): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
-     1>c:\users\turic ioana\documents\github\flappybird\flappy bird\source1.cpp(471): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
-     1>c:\users\turic ioana\documents\github\flappybird\flappy bird\source1.cpp(472): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
-     1>c:\users\turic ioana\documents\github\flappybird\flappy bird\source1.cpp(473): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
-     1>c:\users\turic ioana\documents\github\flappybird\flappy bird\source1.cpp(478): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
-     1>c:\users\turic ioana\documents\github\flappybird\flappy bird\source1.cpp(484): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
-     1>c:\users\turic ioana\documents\github\flappybird\flappy bird\source1.cpp(490): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
-     1>c:\users\turic ioana\documents\github\flappybird\flappy bird\source1.cpp(497): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
-     1>c:\users\turic ioana\documents\github\flappybird\flappy bird\source1.cpp(498): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
-     1>c:\users\turic ioana\documents\github\flappybird\flappy bird\source1.cpp(499): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
-     1>c:\users\turic ioana\documents\github\flappybird\flappy bird\source1.cpp(516): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
+     1>c:\users\turic ioana\documents\github\flappybird\flappy bird\source1.cpp(184): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\turic ioana\documents\github\flappybird\flappy bird\source1.cpp(185): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\turic ioana\documents\github\flappybird\flappy bird\source1.cpp(190): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\turic ioana\documents\github\flappybird\flappy bird\source1.cpp(191): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\turic ioana\documents\github\flappybird\flappy bird\source1.cpp(196): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\turic ioana\documents\github\flappybird\flappy bird\source1.cpp(197): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\turic ioana\documents\github\flappybird\flappy bird\source1.cpp(234): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\turic ioana\documents\github\flappybird\flappy bird\source1.cpp(365): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\turic ioana\documents\github\flappybird\flappy bird\source1.cpp(368): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\turic ioana\documents\github\flappybird\flappy bird\source1.cpp(403): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\turic ioana\documents\github\flappybird\flappy bird\source1.cpp(404): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\turic ioana\documents\github\flappybird\flappy bird\source1.cpp(405): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\turic ioana\documents\github\flappybird\flappy bird\source1.cpp(502): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
+     1>c:\users\turic ioana\documents\github\flappybird\flappy bird\source1.cpp(507): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
+     1>c:\users\turic ioana\documents\github\flappybird\flappy bird\source1.cpp(512): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
+     1>c:\users\turic ioana\documents\github\flappybird\flappy bird\source1.cpp(553): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
+     1>c:\users\turic ioana\documents\github\flappybird\flappy bird\source1.cpp(554): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
+     1>c:\users\turic ioana\documents\github\flappybird\flappy bird\source1.cpp(555): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
+     1>c:\users\turic ioana\documents\github\flappybird\flappy bird\source1.cpp(560): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\turic ioana\documents\github\flappybird\flappy bird\source1.cpp(566): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\turic ioana\documents\github\flappybird\flappy bird\source1.cpp(572): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\turic ioana\documents\github\flappybird\flappy bird\source1.cpp(579): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
+     1>c:\users\turic ioana\documents\github\flappybird\flappy bird\source1.cpp(580): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
+     1>c:\users\turic ioana\documents\github\flappybird\flappy bird\source1.cpp(581): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
+     1>c:\users\turic ioana\documents\github\flappybird\flappy bird\source1.cpp(604): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Turic Ioana\Documents\GitHub\Flappybird\Flappy Bird\Debug\Project1.exe" /INCREMENTAL /NOLOGO /LIBPATH:"C:\Users\Turic Ioana\Desktop\Project1\SFML-2.4.1-windows-vc12-32-bit\SFML-2.4.1\lib" /LIBPATH:"C:\Users\Turic Ioana\Desktop\Project1\SFML-2.4.1-windows-vc12-64-bit\SFML-2.4.1\lib" "sfml-graphics.lib" "sfml-window.lib" "sfml-system.lib" "sfml-main.lib" "sfml-audio.lib" kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Turic Ioana\Documents\GitHub\Flappybird\Flappy Bird\Debug\Project1.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Turic Ioana\Documents\GitHub\Flappybird\Flappy Bird\Debug\Project1.lib" /MACHINE:X86 Debug\Source1.obj
          Project1.vcxproj -> C:\Users\Turic Ioana\Documents\GitHub\Flappybird\Flappy Bird\Debug\Project1.exe
@@ -33,4 +35,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:01.46
+Time Elapsed 00:00:01.20
